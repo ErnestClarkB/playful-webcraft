@@ -5,49 +5,29 @@ import { Button } from "@/components/ui/button";
 import { Plus, Cloud, CloudRain, CloudSun, Wind, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { fetchWeatherData } from "@/utils/weatherApi";
 
 const Index = () => {
   const [cityName, setCityName] = useState("New York");
-  const [cities, setCities] = useState([
-    {
-      id: "1",
-      name: "New York",
-      temperature: 30,
-      condition: "Cloudy",
-      metrics: {
-        humidity: 65,
-        cloudiness: 75,
-        windspeed: 12,
-        pressure: 1015,
-        sunrise: "6:30 AM",
-        sunset: "7:45 PM"
-      }
-    }
-  ]);
+  const [cities, setCities] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleAddCity = () => {
+  const handleAddCity = async () => {
     if (cities.some(city => city.name.toLowerCase() === cityName.toLowerCase())) {
       toast.error("City already exists!");
       return;
     }
-    
-    const newCity = {
-      id: Date.now().toString(),
-      name: cityName,
-      temperature: 30,
-      condition: "Cloudy",
-      metrics: {
-        humidity: 65,
-        cloudiness: 75,
-        windspeed: 12,
-        pressure: 1015,
-        sunrise: "6:30 AM",
-        sunset: "7:45 PM"
-      }
-    };
-    
-    setCities([...cities, newCity]);
-    toast.success("City added successfully!");
+
+    setIsLoading(true);
+    try {
+      const weatherData = await fetchWeatherData(cityName);
+      setCities([...cities, weatherData]);
+      toast.success("City added successfully!");
+    } catch (error) {
+      toast.error("Failed to fetch weather data. Please check the city name.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDeleteCity = (cityId: string) => {
