@@ -60,7 +60,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#accbee] to-[#e7f0fd] p-4 sm:p-8">
       <div className="max-w-md mx-auto animate-fade-in">
         <div className="relative mb-6">
           <Input
@@ -68,12 +68,11 @@ const Index = () => {
             placeholder="Enter city name"
             value={cityName}
             onChange={(e) => setCityName(e.target.value)}
-            className="pr-12 h-12 text-lg"
+            className="pr-12 h-12 text-lg bg-white/80 backdrop-blur-sm border-none"
           />
           <Button
             size="icon"
-            className="absolute right-1 top-1 h-10 w-10"
-            variant="ghost"
+            className="absolute right-1 top-1 h-10 w-10 bg-[#6E59A5] hover:bg-[#7E69AB]"
             onClick={handleAddCity}
           >
             <Plus className="h-5 w-5" />
@@ -81,9 +80,9 @@ const Index = () => {
         </div>
 
         <Tabs defaultValue={cities[0].id} className="w-full">
-          <TabsList className="w-full mb-4 flex overflow-x-auto">
+          <TabsList className="w-full mb-4 flex overflow-x-auto bg-white/20 backdrop-blur-sm">
             {cities.map((city) => (
-              <TabsTrigger key={city.id} value={city.id} className="flex-1">
+              <TabsTrigger key={city.id} value={city.id} className="flex-1 text-gray-700">
                 {city.name}
               </TabsTrigger>
             ))}
@@ -91,19 +90,19 @@ const Index = () => {
 
           {cities.map((city) => (
             <TabsContent key={city.id} value={city.id}>
-              <Card className="weather-card p-8 animate-slide-up relative">
+              <Card className="weather-card p-8 animate-slide-up relative bg-white/80">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute right-2 top-2"
+                  className="absolute right-2 top-2 hover:bg-red-100 hover:text-red-600"
                   onClick={() => handleDeleteCity(city.id)}
                 >
                   <X className="h-4 w-4" />
                 </Button>
 
                 <div className="text-center mb-8">
-                  <h1 className="text-3xl font-semibold mb-2">{city.name}</h1>
-                  <p className="text-gray-500">
+                  <h1 className="text-3xl font-semibold mb-2 text-gray-800">{city.name}</h1>
+                  <p className="text-gray-600">
                     {new Date().toLocaleDateString("en-US", {
                       weekday: "long",
                       year: "numeric",
@@ -114,54 +113,55 @@ const Index = () => {
                 </div>
 
                 <div className="flex justify-center mb-8">
-                  <Cloud className="weather-icon h-24 w-24 text-gray-600" />
+                  <Cloud className="weather-icon h-24 w-24 text-[#6E59A5]" />
                 </div>
 
                 <div className="text-center mb-12">
-                  <div className="text-6xl font-light mb-2">{city.temperature}°</div>
+                  <div className="text-6xl font-light mb-2 text-gray-800">{city.temperature}°</div>
                   <div className="text-xl text-gray-600">{city.condition}</div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-8">
-                  <div className="col-span-2 sm:col-span-1 p-4 bg-white rounded-lg shadow-sm">
+                  <div className="p-4 bg-[#F2FCE2] rounded-lg shadow-sm">
                     <div className="flex space-x-3 items-center">
-                      <CloudRain className="h-5 w-5 text-gray-500" />
-                      <div className="text-sm">Today</div>
+                      <CloudRain className="h-5 w-5 text-gray-600" />
+                      <div className="text-sm text-gray-700">Today</div>
                     </div>
                   </div>
-                  <div className="col-span-2 sm:col-span-1 p-4 bg-white rounded-lg shadow-sm">
+                  <div className="p-4 bg-[#E5DEFF] rounded-lg shadow-sm">
                     <div className="flex space-x-3 items-center">
-                      <CloudSun className="h-5 w-5 text-gray-500" />
-                      <div className="text-sm">Tomorrow</div>
+                      <CloudSun className="h-5 w-5 text-gray-600" />
+                      <div className="text-sm text-gray-700">Tomorrow</div>
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
                   {[
-                    { label: "Humidity", value: `${city.metrics.humidity}%` },
-                    { label: "Cloudiness", value: `${city.metrics.cloudiness}%` },
-                    { label: "Wind Speed", value: `${city.metrics.windspeed} km/h` },
-                    { label: "Pressure", value: `${city.metrics.pressure} hPa` },
+                    { label: "Humidity", value: `${city.metrics.humidity}%`, bg: "bg-[#FDE1D3]" },
+                    { label: "Cloudiness", value: `${city.metrics.cloudiness}%`, bg: "bg-[#D3E4FD]" },
+                    { label: "Wind Speed", value: `${city.metrics.windspeed} km/h`, bg: "bg-[#FFDEE2]" },
+                    { label: "Pressure", value: `${city.metrics.pressure} hPa`, bg: "bg-[#E5DEFF]" },
                   ].map((metric, index) => (
-                    <div key={index} className="metric-circle w-full aspect-square flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="text-sm text-gray-500">{metric.label}</div>
-                        <div className="text-xl font-semibold">{metric.value}</div>
-                      </div>
+                    <div 
+                      key={index} 
+                      className={`${metric.bg} rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col items-center justify-center min-h-[120px]`}
+                    >
+                      <div className="text-sm text-gray-600 mb-2">{metric.label}</div>
+                      <div className="text-xl font-semibold text-gray-800">{metric.value}</div>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-8 flex items-center justify-between px-4">
-                  <div className="text-sm text-gray-500">
+                <div className="mt-8 flex items-center justify-between px-4 bg-[#F1F0FB] rounded-lg p-4">
+                  <div className="text-sm text-gray-600">
                     <div>Sunrise</div>
                     <div className="font-semibold">{city.metrics.sunrise}</div>
                   </div>
-                  <div className="h-1 flex-1 mx-4 bg-gray-200 rounded">
-                    <div className="h-full w-1/3 bg-gray-400 rounded" />
+                  <div className="h-1 flex-1 mx-4 bg-[#D6BCFA] rounded">
+                    <div className="h-full w-1/3 bg-[#9b87f5] rounded" />
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-600">
                     <div>Sunset</div>
                     <div className="font-semibold">{city.metrics.sunset}</div>
                   </div>
