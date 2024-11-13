@@ -13,6 +13,8 @@ const Index = () => {
     cloudiness: 75,
     windspeed: 12,
     pressure: 1015,
+    sunrise: "6:30 AM",
+    sunset: "7:45 PM"
   });
 
   return (
@@ -73,38 +75,33 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="metric-circle">
-              <div className="text-center">
-                <div className="text-sm text-gray-500">Humidity</div>
-                <div className="text-xl font-semibold">{metrics.humidity}%</div>
+            {[
+              { label: "Humidity", value: `${metrics.humidity}%` },
+              { label: "Cloudiness", value: `${metrics.cloudiness}%` },
+              { label: "Wind Speed", value: `${metrics.windspeed} km/h` },
+              { label: "Pressure", value: `${metrics.pressure} hPa` },
+            ].map((metric, index) => (
+              <div key={index} className="metric-circle w-full aspect-square flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-sm text-gray-500">{metric.label}</div>
+                  <div className="text-xl font-semibold">{metric.value}</div>
+                </div>
               </div>
-            </div>
-            <div className="metric-circle">
-              <div className="text-center">
-                <div className="text-sm text-gray-500">Cloudiness</div>
-                <div className="text-xl font-semibold">{metrics.cloudiness}%</div>
-              </div>
-            </div>
-            <div className="metric-circle">
-              <div className="text-center">
-                <div className="text-sm text-gray-500">Wind Speed</div>
-                <div className="text-xl font-semibold">{metrics.windspeed} km/h</div>
-              </div>
-            </div>
-            <div className="metric-circle">
-              <div className="text-center">
-                <div className="text-sm text-gray-500">Pressure</div>
-                <div className="text-xl font-semibold">{metrics.pressure} hPa</div>
-              </div>
-            </div>
+            ))}
           </div>
 
           <div className="mt-8 flex items-center justify-between px-4">
-            <div className="text-sm text-gray-500">Sunrise</div>
+            <div className="text-sm text-gray-500">
+              <div>Sunrise</div>
+              <div className="font-semibold">{metrics.sunrise}</div>
+            </div>
             <div className="h-1 flex-1 mx-4 bg-gray-200 rounded">
               <div className="h-full w-1/3 bg-gray-400 rounded" />
             </div>
-            <div className="text-sm text-gray-500">Sunset</div>
+            <div className="text-sm text-gray-500">
+              <div>Sunset</div>
+              <div className="font-semibold">{metrics.sunset}</div>
+            </div>
           </div>
         </Card>
       </div>
