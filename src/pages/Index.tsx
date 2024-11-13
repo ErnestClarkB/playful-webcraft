@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,25 @@ const Index = () => {
   const [cityName, setCityName] = useState("New York");
   const [cities, setCities] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch default city on component mount
+  useEffect(() => {
+    const fetchDefaultCity = async () => {
+      setIsLoading(true);
+      try {
+        const weatherData = await fetchWeatherData("New York");
+        setCities([weatherData]);
+      } catch (error) {
+        toast.error("Failed to fetch default city weather data.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (cities.length === 0) {
+      fetchDefaultCity();
+    }
+  }, []);
 
   const handleAddCity = async () => {
     if (cities.some(city => city.name.toLowerCase() === cityName.toLowerCase())) {
@@ -39,6 +58,14 @@ const Index = () => {
     toast.success("City removed successfully!");
   };
 
+  if (isLoading && cities.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#accbee] to-[#e7f0fd] p-4 sm:p-8 flex items-center justify-center">
+        <div className="text-lg text-gray-700">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#accbee] to-[#e7f0fd] p-4 sm:p-8">
       <div className="max-w-md mx-auto animate-fade-in">
@@ -54,22 +81,24 @@ const Index = () => {
             size="icon"
             className="absolute right-1 top-1 h-10 w-10 bg-[#6E59A5] hover:bg-[#7E69AB]"
             onClick={handleAddCity}
+            disabled={isLoading}
           >
             <Plus className="h-5 w-5" />
           </Button>
         </div>
 
-        <Tabs defaultValue={cities[0].id} className="w-full">
-          <TabsList className="w-full mb-4 flex overflow-x-auto bg-white/20 backdrop-blur-sm">
-            {cities.map((city) => (
-              <TabsTrigger key={city.id} value={city.id} className="flex-1 text-gray-700">
-                {city.name}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+        {cities.length > 0 && (
+          <Tabs defaultValue={cities[0].id} className="w-full">
+            <TabsList className="w-full mb-4 flex overflow-x-auto bg-white/20 backdrop-blur-sm">
+              {cities.map((city) => (
+                <TabsTrigger key={city.id} value={city.id} className="flex-1 text-gray-700">
+                  {city.name}
+                </TabsTrigger>
+              ))}
+            </TabsList>
 
-          {cities.map((city) => (
-            <TabsContent key={city.id} value={city.id}>
+            {cities.map((city) => (
+              <TabsContent key={city.id} value={city.id}>
               <Card className="weather-card p-8 animate-slide-up relative bg-white/80">
                 <Button
                   variant="ghost"
@@ -147,9 +176,10 @@ const Index = () => {
                   </div>
                 </div>
               </Card>
-            </TabsContent>
-          ))}
-        </Tabs>
+              </TabsContent>
+            ))}
+          </Tabs>
+        )}
       </div>
     </div>
   );
